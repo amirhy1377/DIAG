@@ -12,7 +12,13 @@ async def stream_scheduler(ws: WebSocket, scheduler: PollScheduler) -> None:
     """Stream telemetry samples from *scheduler* to an accepted websocket."""
     queue = scheduler.subscribe()
     try:
-        await ws.send_json({"type": "status", "status": "streaming", "session_id": scheduler.session_id})
+        await ws.send_json(
+            {
+                "type": "status",
+                "status": "streaming",
+                "session_id": scheduler.session_id,
+            }
+        )
         while True:
             message = await queue.get()
             if message is None:

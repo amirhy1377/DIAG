@@ -33,7 +33,9 @@ class CapabilityCache:
     def set(self, vin: str, adapter_id: str, pids: Set[str], ttl_days: int = 7) -> None:
         """Persist the capability list for the VIN and adapter combination."""
         expires_at = dt.datetime.utcnow() + dt.timedelta(days=max(1, ttl_days))
-        self._store[(vin, adapter_id)] = CapabilityEntry(pids=set(pids), expires_at=expires_at)
+        self._store[(vin, adapter_id)] = CapabilityEntry(
+            pids=set(pids), expires_at=expires_at
+        )
 
     def invalidate(self, vin: str, adapter_id: str) -> None:
         """Drop the cached entry if it exists."""

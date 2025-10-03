@@ -18,7 +18,9 @@ class DTCManager:
     def read(self) -> Dict[str, object]:
         """Return a copy of the cached DTC snapshot."""
         return {
-            "codes": {bucket: list(values) for bucket, values in self._snapshot.items()},
+            "codes": {
+                bucket: list(values) for bucket, values in self._snapshot.items()
+            },
             "updated_at": self._updated_at.isoformat() if self._updated_at else None,
         }
 

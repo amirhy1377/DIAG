@@ -13,7 +13,9 @@ def main(argv: list[str] | None = None) -> int:
 
     start_parser = subparsers.add_parser("start", help="Start a logging session")
     start_parser.add_argument("--port", required=True, help="Serial port, e.g. COM3")
-    start_parser.add_argument("--rate", type=int, default=5, help="Target poll rate in Hz")
+    start_parser.add_argument(
+        "--rate", type=int, default=5, help="Target poll rate in Hz"
+    )
     start_parser.add_argument("--pids", default="RPM,SPEED,COOLANT_TEMP")
     start_parser.add_argument("--log", choices=["csv", "parquet"], default="parquet")
     start_parser.add_argument("--out", default="./logs")
@@ -22,7 +24,9 @@ def main(argv: list[str] | None = None) -> int:
     dtc_parser = subparsers.add_parser("dtc", help="Interact with DTCs")
     dtc_parser.add_argument("--read", action="store_true", help="Read DTCs")
     dtc_parser.add_argument("--clear", action="store_true", help="Clear DTCs")
-    dtc_parser.add_argument("--confirm", action="store_true", help="Require confirmation before clearing")
+    dtc_parser.add_argument(
+        "--confirm", action="store_true", help="Require confirmation before clearing"
+    )
 
     subparsers.add_parser("stop", help="Stop the active session")
 

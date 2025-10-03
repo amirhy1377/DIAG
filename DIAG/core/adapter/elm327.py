@@ -38,7 +38,9 @@ class ELM327Adapter:
                 timeout=self._config.timeout,
             )
         except Exception as exc:  # serial.SerialException, but keep loose typing
-            raise ConnectionError(f"Failed to open serial port {self._config.port}: {exc}") from exc
+            raise ConnectionError(
+                f"Failed to open serial port {self._config.port}: {exc}"
+            ) from exc
         self._initialise()
 
     def _initialise(self) -> None:

@@ -3,7 +3,7 @@ from __future__ import annotations
 import threading
 import time
 from pathlib import Path
-from typing import Dict, Iterable, List
+from typing import Dict, List
 
 import pyarrow as pa
 import pyarrow.parquet as pq
@@ -22,7 +22,9 @@ SCHEMA = pa.schema(
 class ParquetLogger:
     """Buffered writer for Parquet datasets with safe flushing."""
 
-    def __init__(self, root_path: str, session_id: str, flush_threshold: int = 200) -> None:
+    def __init__(
+        self, root_path: str, session_id: str, flush_threshold: int = 200
+    ) -> None:
         self._root = Path(root_path)
         self._root.mkdir(parents=True, exist_ok=True)
         self._session_id = session_id
@@ -77,7 +79,9 @@ class ParquetLogger:
         if not self._buffer:
             return
         table = pa.Table.from_pylist(self._buffer, schema=SCHEMA)
-        pq.write_to_dataset(table, root_path=str(self._root), partition_cols=["session_id"])
+        pq.write_to_dataset(
+            table, root_path=str(self._root), partition_cols=["session_id"]
+        )
         self._buffer.clear()
 
     def _ensure_open(self) -> None:

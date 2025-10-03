@@ -44,7 +44,9 @@ class StartSessionRequest(BaseModel):
     rate: float = Field(5.0, gt=0.1, le=50.0, description="Target poll rate in Hz")
     pids: List[str] = Field(default_factory=lambda: DEFAULT_PIDS.copy())
     log_root: str = Field("./logs", description="Directory for session logs")
-    seed: Optional[int] = Field(default=None, description="Seed for deterministic telemetry")
+    seed: Optional[int] = Field(
+        default=None, description="Seed for deterministic telemetry"
+    )
 
     @validator("pids")
     def _ensure_pids(cls, value: List[str]) -> List[str]:
@@ -107,17 +109,25 @@ def health() -> Dict[str, Any]:
 async def session_status() -> SessionStatusResponse:
     async with STATE.lock:
         active = STATE.session_controller.active
-        return SessionStatusResponse(active=bool(active), session=_serialise_session(active) if active else None)
+        return SessionStatusResponse(
+            active=bool(active), session=_serialise_session(active) if active else None
+        )
 
 
 @app.post("/v1/session/start", response_model=StartSessionResponse)
-async def start_session(payload: StartSessionRequest | None = Body(default=None)) -> StartSessionResponse:
+async def start_session(
+    payload: StartSessionRequest | None = Body(default=None),
+) -> StartSessionResponse:
     request = payload or StartSessionRequest()
 
     async with STATE.lock:
         if STATE.session_controller.active:
-            raise HTTPException(status_code=409, detail="A diagnostic session is already running")
-        metadata = STATE.session_controller.start(vin=request.vin, adapter_id=request.adapter_id or request.port)
+            raise HTTPException(
+                status_code=409, detail="A diagnostic session is already running"
+            )
+        metadata = STATE.session_controller.start(
+            vin=request.vin, adapter_id=request.adapter_id or request.port
+        )
 
     reader = SimulatedPIDReader(seed=request.seed)
     scheduler = PollScheduler(
@@ -143,13 +153,15 @@ async def start_session(payload: StartSessionRequest | None = Body(default=None)
             STATE.vin = vin
             STATE.adapter_id = adapter_id
             STATE.capability_cache.set(vin, adapter_id, set(scheduler.pids))
-            metadata.vehicle_profile.update({
-                "port": request.port,
-                "pids": ",".join(scheduler.pids),
-                "target_rate_hz": str(request.rate),
-                "actual_rate_hz": f"{actual_rate:.6f}",
-                "poll_interval_s": f"{actual_interval:.6f}",
-            })
+            metadata.vehicle_profile.update(
+                {
+                    "port": request.port,
+                    "pids": ",".join(scheduler.pids),
+                    "target_rate_hz": str(request.rate),
+                    "actual_rate_hz": f"{actual_rate:.6f}",
+                    "poll_interval_s": f"{actual_interval:.6f}",
+                }
+            )
             session_payload = _serialise_session(metadata)
     except asyncio.CancelledError:
         raise
@@ -160,7 +172,9 @@ async def start_session(payload: StartSessionRequest | None = Body(default=None)
             logger.close()
         async with STATE.lock:
             STATE.session_controller.abort()
-        raise HTTPException(status_code=500, detail="Failed to start diagnostic session") from exc
+        raise HTTPException(
+            status_code=500, detail="Failed to start diagnostic session"
+        ) from exc
 
     return StartSessionResponse(
         ok=True,
@@ -231,6 +245,3 @@ async def telemetry(ws: WebSocket) -> None:
     finally:
         with suppress(Exception):
             await ws.close()
-
-
-

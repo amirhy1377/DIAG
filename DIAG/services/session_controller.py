@@ -25,7 +25,9 @@ class SessionController:
     def __init__(self) -> None:
         self._session: Optional[SessionMetadata] = None
 
-    def start(self, vin: Optional[str] = None, adapter_id: Optional[str] = None) -> SessionMetadata:
+    def start(
+        self, vin: Optional[str] = None, adapter_id: Optional[str] = None
+    ) -> SessionMetadata:
         """Start a new diagnostic session."""
         if self._session is not None:
             raise RuntimeError("A diagnostic session is already active")
@@ -65,7 +67,9 @@ class SessionController:
     def _serialise(metadata: SessionMetadata) -> Dict[str, object]:
         payload = asdict(metadata)
         payload["started_at"] = metadata.started_at.isoformat()
-        payload["ended_at"] = metadata.ended_at.isoformat() if metadata.ended_at else None
+        payload["ended_at"] = (
+            metadata.ended_at.isoformat() if metadata.ended_at else None
+        )
         return payload
 
 

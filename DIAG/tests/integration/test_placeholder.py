@@ -5,7 +5,9 @@ from app.api import app
 
 def test_session_lifecycle_and_stream(tmp_path) -> None:
     client = TestClient(app)
-    start_resp = client.post("/v1/session/start", json={"log_root": str(tmp_path), "rate": 5.0})
+    start_resp = client.post(
+        "/v1/session/start", json={"log_root": str(tmp_path), "rate": 5.0}
+    )
     assert start_resp.status_code == 200
     payload = start_resp.json()
     assert payload["ok"] is True
@@ -25,7 +27,12 @@ def test_session_lifecycle_and_stream(tmp_path) -> None:
         assert status_message["status"] == "streaming"
         telemetry = websocket.receive_json()
         assert telemetry["type"] == "telemetry"
-        assert telemetry["payload"]["pid"] in {"RPM", "SPEED", "COOLANT_TEMP", "THROTTLE_POS"}
+        assert telemetry["payload"]["pid"] in {
+            "RPM",
+            "SPEED",
+            "COOLANT_TEMP",
+            "THROTTLE_POS",
+        }
 
     stop_resp = client.post("/v1/session/stop")
     assert stop_resp.status_code == 200
@@ -39,10 +46,16 @@ def test_dtc_endpoints() -> None:
     client = TestClient(app)
     read_resp = client.get("/v1/dtc")
     assert read_resp.status_code == 200
-    assert read_resp.json()["snapshot"]["codes"] == {"current": [], "pending": [], "permanent": []}
+    assert read_resp.json()["snapshot"]["codes"] == {
+        "current": [],
+        "pending": [],
+        "permanent": [],
+    }
 
     clear_resp = client.post("/v1/dtc/clear")
     assert clear_resp.status_code == 200
-    assert clear_resp.json()["snapshot"]["codes"] == {"current": [], "pending": [], "permanent": []}
-
-
+    assert clear_resp.json()["snapshot"]["codes"] == {
+        "current": [],
+        "pending": [],
+        "permanent": [],
+    }

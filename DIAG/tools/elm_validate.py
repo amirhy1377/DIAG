@@ -34,7 +34,9 @@ def validate(port: str) -> ValidationResult:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Validate an ELM327 adapter")
-    parser.add_argument("port", help="Serial port identifier, e.g. COM3 or /dev/ttyUSB0")
+    parser.add_argument(
+        "port", help="Serial port identifier, e.g. COM3 or /dev/ttyUSB0"
+    )
     args = parser.parse_args(argv)
 
     result = validate(args.port)

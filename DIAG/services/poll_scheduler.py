@@ -7,7 +7,9 @@ from contextlib import suppress
 from typing import Any, Awaitable, Callable, Dict, Iterable, Optional, Set
 
 TelemetrySample = Dict[str, Any]
-TelemetryReader = Callable[[str], Awaitable[TelemetrySample | None] | TelemetrySample | None]
+TelemetryReader = Callable[
+    [str], Awaitable[TelemetrySample | None] | TelemetrySample | None
+]
 TelemetrySink = Callable[[TelemetrySample], Awaitable[None] | None]
 
 

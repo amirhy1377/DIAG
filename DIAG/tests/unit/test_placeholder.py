@@ -13,7 +13,9 @@ from services.session_controller import SessionController
 @pytest.mark.asyncio
 async def test_poll_scheduler_dispatches_samples() -> None:
     reader = SimulatedPIDReader(seed=42)
-    scheduler = PollScheduler(interval=0.01, pids=["RPM"], reader=reader.read, session_id="test-session")
+    scheduler = PollScheduler(
+        interval=0.01, pids=["RPM"], reader=reader.read, session_id="test-session"
+    )
     queue = scheduler.subscribe()
     assert scheduler.interval == pytest.approx(0.01, rel=1e-6)
     assert scheduler.rate_hz == pytest.approx(100.0, rel=1e-6)
@@ -55,4 +57,3 @@ def test_session_controller_abort() -> None:
     controller.abort()
     assert controller.active is None
     assert controller.stop() is None
-
