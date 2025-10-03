@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>DIAG Dashboard</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: Arial, sans-serif;
+        background: #f5f7fb;
+      }
+      body {
+        margin: 2rem;
+        color: #1b1d29;
+      }
+      h1 {
+        margin-bottom: 1rem;
+      }
+      h2 {
+        font-size: 1.1rem;
+        margin: 0 0 0.75rem;
+      }
+      .dashboard {
+        display: grid;
+        gap: 1.25rem;
+      }
+      @media (min-width: 860px) {
+        .dashboard {
+          grid-template-columns: repeat(12, minmax(0, 1fr));
+        }
+        .span-4 {
+          grid-column: span 4;
+        }
+        .span-6 {
+          grid-column: span 6;
+        }
+        .span-8 {
+          grid-column: span 8;
+        }
+        .span-12 {
+          grid-column: span 12;
+        }
+      }
+      .card {
+        background: #fff;
+        border: 1px solid #dde1f0;
+        border-radius: 0.75rem;
+        padding: 1.25rem;
+        box-shadow: 0 8px 24px rgba(23, 28, 45, 0.04);
+      }
+      .status-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .status-indicator {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 1.1rem;
+      }
+      .status-badge {
+        width: 0.9rem;
+        height: 0.9rem;
+        border-radius: 50%;
+        display: inline-flex;
+        box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.6);
+        background: #b9bdcc;
+        position: relative;
+      }
+      .status-badge::after {
+        content: "";
+        position: absolute;
+        inset: -4px;
+        border-radius: 50%;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
+      .badge-online {
+        background: #1a8917;
+      }
+      .badge-online::after {
+        background: rgba(74, 222, 128, 0.35);
+        opacity: 1;
+      }
+      .badge-offline {
+        background: #bf2f2f;
+      }
+      .badge-offline::after {
+        background: rgba(239, 68, 68, 0.25);
+        opacity: 1;
+      }
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        align-items: center;
+      }
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+      button {
+        background: #3843d0;
+        color: #fff;
+        border: none;
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        transition: background 0.2s ease;
+      }
+      button:hover {
+        background: #2933a1;
+      }
+      button.secondary {
+        background: #f1f3fb;
+        color: #1b1d29;
+      }
+      button.secondary:hover {
+        background: #e2e7fb;
+      }
+      input[type="text"] {
+        border: 1px solid #cbd1e7;
+        border-radius: 0.5rem;
+        padding: 0.45rem 0.65rem;
+        min-width: 160px;
+      }
+      label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 0.75rem;
+      }
+      .metric {
+        padding: 0.75rem;
+        border: 1px solid #eef1fb;
+        border-radius: 0.6rem;
+        background: #fafbff;
+        display: grid;
+        gap: 0.35rem;
+      }
+      .metric-warning {
+        border-color: #f5a48b;
+        background: #fff6f2;
+      }
+      .metric-label {
+        font-size: 0.8rem;
+        color: #6c748f;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+      }
+      .metric-value {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #1b1d29;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        padding: 0.5rem 0.25rem;
+        text-align: left;
+        border-bottom: 1px solid #eef1fb;
+        font-size: 0.9rem;
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+      .history-empty {
+        text-align: center;
+        color: #6c748f;
+        font-style: italic;
+      }
+      .chart-wrapper {
+        display: grid;
+        gap: 0.35rem;
+      }
+      canvas {
+        width: 100%;
+        height: 150px;
+        border: 1px dashed #d4daef;
+        border-radius: 0.5rem;
+        background: #fdfdff;
+      }
+      .diagnostics {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 0.75rem;
+      }
+      .diagnostic {
+        margin: 0;
+        padding: 0.6rem 0.75rem;
+        border: 1px solid #eef1fb;
+        border-radius: 0.6rem;
+        background: #fafbff;
+      }
+      .diagnostic dt {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: #6c748f;
+        letter-spacing: 0.04em;
+        margin: 0 0 0.2rem;
+      }
+      .diagnostic dd {
+        margin: 0;
+        font-weight: 600;
+      }
+      pre {
+        margin: 0;
+        background: #0f172a;
+        color: #e2e8f0;
+        padding: 1rem;
+        border-radius: 0.75rem;
+        max-height: 320px;
+        overflow: auto;
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Live Telemetry</h1>
+    <section class="card status-header">
+      <div class="status-indicator">
+        <span id="status-badge" class="status-badge badge-offline" aria-hidden="true"></span>
+        <span id="status-label">Disconnected</span>
+      </div>
+      <div class="controls">
+        <button id="toggle-stream">Pause Stream</button>
+        <label>
+          Filter type
+          <input id="filter-type" type="text" placeholder="e.g. rpm" aria-label="Filter telemetry by type" />
+        </label>
+        <button id="export-current" class="secondary">Export Payload</button>
+      </div>
+    </section>
+
+    <div class="dashboard">
+      <section class="card span-4">
+        <h2>Key Metrics</h2>
+        <div class="metrics-grid">
+          <div class="metric" data-metric="rpm">
+            <span class="metric-label">RPM</span>
+            <span class="metric-value" id="metric-rpm">--</span>
+          </div>
+          <div class="metric" data-metric="speed">
+            <span class="metric-label">Speed</span>
+            <span class="metric-value" id="metric-speed">--</span>
+          </div>
+          <div class="metric" data-metric="coolant">
+            <span class="metric-label">Coolant Temp</span>
+            <span class="metric-value" id="metric-coolant">--</span>
+          </div>
+          <div class="metric" data-metric="throttle">
+            <span class="metric-label">Throttle</span>
+            <span class="metric-value" id="metric-throttle">--</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="card span-8">
+        <h2>Live Trends</h2>
+        <div class="chart-wrapper">
+          <div>
+            <strong>RPM (rpm)</strong>
+            <canvas id="rpm-chart"></canvas>
+          </div>
+          <div>
+            <strong>Coolant Temp (&deg;C)</strong>
+            <canvas id="coolant-chart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <section class="card span-6">
+        <h2>Recent Messages</h2>
+        <table aria-live="polite">
+          <thead>
+            <tr>
+              <th scope="col">Time</th>
+              <th scope="col">Type</th>
+              <th scope="col">Summary</th>
+            </tr>
+          </thead>
+          <tbody id="history-body"></tbody>
+        </table>
+      </section>
+
+      <section class="card span-6">
+        <h2>Diagnostics</h2>
+        <div class="diagnostics">
+          <dl class="diagnostic">
+            <dt>Connected Since</dt>
+            <dd id="connected-since">--</dd>
+          </dl>
+          <dl class="diagnostic">
+            <dt>Last Message</dt>
+            <dd id="heartbeat-age">--</dd>
+          </dl>
+          <dl class="diagnostic">
+            <dt>Latency</dt>
+            <dd id="latency">--</dd>
+          </dl>
+          <dl class="diagnostic">
+            <dt>Total Messages</dt>
+            <dd id="message-count">0</dd>
+          </dl>
+          <dl class="diagnostic">
+            <dt>Filtered</dt>
+            <dd id="filtered-count">0</dd>
+          </dl>
+          <dl class="diagnostic">
+            <dt>Parse Errors</dt>
+            <dd id="parse-error-count">0</dd>
+          </dl>
+        </div>
+      </section>
+
+      <section class="card span-12">
+        <h2>Raw Payload</h2>
+        <pre id="payload">{}</pre>
+      </section>
+    </div>
+
+    <script>
+      const statusBadge = document.getElementById("status-badge");
+      const statusLabel = document.getElementById("status-label");
+      const toggleStreamBtn = document.getElementById("toggle-stream");
+      const filterTypeInput = document.getElementById("filter-type");
+      const exportBtn = document.getElementById("export-current");
+
+      const payloadEl = document.getElementById("payload");
+      const metricContainers = {
+        rpm: document.querySelector('[data-metric="rpm"]'),
+        speed: document.querySelector('[data-metric="speed"]'),
+        coolant: document.querySelector('[data-metric="coolant"]'),
+        throttle: document.querySelector('[data-metric="throttle"]'),
+      };
+      const metricsEls = {
+        rpm: document.getElementById("metric-rpm"),
+        speed: document.getElementById("metric-speed"),
+        coolant: document.getElementById("metric-coolant"),
+        throttle: document.getElementById("metric-throttle"),
+      };
+      const historyBody = document.getElementById("history-body");
+      const rpmCanvas = document.getElementById("rpm-chart");
+      const coolantCanvas = document.getElementById("coolant-chart");
+
+      const connectedSinceEl = document.getElementById("connected-since");
+      const heartbeatAgeEl = document.getElementById("heartbeat-age");
+      const latencyEl = document.getElementById("latency");
+      const messageCountEl = document.getElementById("message-count");
+      const filteredCountEl = document.getElementById("filtered-count");
+      const parseErrorsEl = document.getElementById("parse-error-count");
+
+      const METRIC_CONFIG = {
+        rpm: {
+          label: "RPM",
+          paths: ["RPM.value", "RPM", "rpm"],
+          unit: "rpm",
+          precision: 0,
+          warn: (value) => value >= 6500,
+        },
+        speed: {
+          label: "Speed",
+          paths: ["SPEED.value", "speed.value", "speed", "vehicle.speed"],
+          unit: "km/h",
+          precision: 1,
+        },
+        coolant: {
+          label: "Coolant Temp",
+          paths: [
+            "COOLANT_TEMP.value",
+            "coolant_temp.value",
+            "coolant_temp",
+            "engine.coolant",
+          ],
+          unit: "degC",
+          precision: 1,
+          warn: (value) => value >= 110,
+        },
+        throttle: {
+          label: "Throttle",
+          paths: ["THROTTLE_POS.value", "throttle_pos", "throttle"],
+          unit: "%",
+          precision: 0,
+        },
+      };
+
+      const MAX_HISTORY = 25;
+      const MAX_POINTS = 120;
+      const STORAGE_KEY = "diag-dashboard-state-v1";
+
+      let isPaused = false;
+      let filterType = "";
+      let latestPayload = "{}";
+      let lastParsedMessage = null;
+      let lastMetricSnapshot = null;
+      let history = [];
+      let connectedSince = null;
+      let lastMessageTime = null;
+      let lastLatencyMs = null;
+      let totalMessages = 0;
+      let filteredMessages = 0;
+      let parseErrors = 0;
+
+      let rpmSeries = [];
+      let coolantSeries = [];
+
+      let storageEnabled = true;
+      try {
+        const testKey = "__diag_storage_test__";
+        window.localStorage.setItem(testKey, "1");
+        window.localStorage.removeItem(testKey);
+      } catch (error) {
+        storageEnabled = false;
+        console.warn("Local storage unavailable, telemetry state will not persist", error);
+      }
+
+      let isRestoring = false;
+      let persistTimer = null;
+
+      const canvases = [rpmCanvas, coolantCanvas];
+      canvases.forEach((canvas) => sizeCanvas(canvas));
+      window.addEventListener("resize", () => {
+        canvases.forEach((canvas) => sizeCanvas(canvas));
+        drawAllCharts();
+      });
+
+      function sizeCanvas(canvas) {
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+      }
+
+      function setStatus(connected) {
+        statusBadge.classList.toggle("badge-online", connected);
+        statusBadge.classList.toggle("badge-offline", !connected);
+      }
+
+      function pickValue(source, keys) {
+        if (!source || typeof source !== "object") {
+          return undefined;
+        }
+        for (const key of keys) {
+          const parts = key.split(".");
+          let value = source;
+          for (const part of parts) {
+            if (value && Object.prototype.hasOwnProperty.call(value, part)) {
+              value = value[part];
+            } else {
+              value = undefined;
+              break;
+            }
+          }
+          if (value !== undefined && value !== null) {
+            return value;
+          }
+        }
+        return undefined;
+      }
+
+      function toNumber(value) {
+        if (typeof value === "number" && Number.isFinite(value)) {
+          return value;
+        }
+        if (typeof value === "string" && value.trim() !== "") {
+          const parsed = Number(value);
+          if (Number.isFinite(parsed)) {
+            return parsed;
+          }
+        }
+        return null;
+      }
+
+      function extractMetric(payload, paths) {
+        const candidate = pickValue(payload, paths);
+        if (candidate === undefined || candidate === null) {
+          return null;
+        }
+        if (typeof candidate === "object" && candidate !== null) {
+          if (Object.prototype.hasOwnProperty.call(candidate, "value")) {
+            return toNumber(candidate.value);
+          }
+        }
+        return toNumber(candidate);
+      }
+
+      function buildMetricSnapshot(payload) {
+        const snapshot = {};
+        Object.entries(METRIC_CONFIG).forEach(([key, config]) => {
+          snapshot[key] = payload ? extractMetric(payload, config.paths) : null;
+        });
+        return snapshot;
+      }
+
+      function formatMetric(value, config) {
+        if (value === null || value === undefined) {
+          return "--";
+        }
+        const precision = typeof config.precision === "number" ? config.precision : 1;
+        const formatted = precision === 0 ? Math.round(value).toString() : value.toFixed(precision);
+        return config.unit ? `${formatted} ${config.unit}` : formatted;
+      }
+
+      function applyMetricSnapshot(snapshot) {
+        Object.entries(METRIC_CONFIG).forEach(([key, config]) => {
+          const container = metricContainers[key];
+          const valueEl = metricsEls[key];
+          const value = snapshot ? snapshot[key] : null;
+          valueEl.textContent = formatMetric(value, config);
+          if (container) {
+            const warn = typeof config.warn === "function" && typeof value === "number" && config.warn(value);
+            container.classList.toggle("metric-warning", warn);
+          }
+        });
+      }
+
+      function updateMetrics(payload) {
+        const snapshot = buildMetricSnapshot(payload);
+        applyMetricSnapshot(snapshot);
+        lastMetricSnapshot = snapshot;
+        requestPersist();
+        return snapshot;
+      }
+
+      function appendSeries(series, value) {
+        series.push(value);
+        if (series.length > MAX_POINTS) {
+          series.shift();
+        }
+      }
+
+      function drawChart(canvas, series, color) {
+        const context = canvas.getContext("2d");
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        if (series.length < 2) {
+          return;
+        }
+        const width = canvas.width;
+        const height = canvas.height;
+        const min = Math.min(...series);
+        const max = Math.max(...series);
+        const range = max - min || 1;
+        const stepX = width / (series.length - 1);
+        context.strokeStyle = color;
+        context.lineWidth = 2;
+        context.beginPath();
+        series.forEach((value, index) => {
+          const x = index * stepX;
+          const y = height - ((value - min) / range) * (height - 8) - 4;
+          if (index === 0) {
+            context.moveTo(x, y);
+          } else {
+            context.lineTo(x, y);
+          }
+        });
+        context.stroke();
+      }
+
+      function drawAllCharts() {
+        drawChart(rpmCanvas, rpmSeries, "#3843d0");
+        drawChart(coolantCanvas, coolantSeries, "#f97316");
+      }
+
+      function updateCharts(snapshot) {
+        if (!snapshot) {
+          return;
+        }
+        if (typeof snapshot.rpm === "number") {
+          appendSeries(rpmSeries, snapshot.rpm);
+        }
+        if (typeof snapshot.coolant === "number") {
+          appendSeries(coolantSeries, snapshot.coolant);
+        }
+        drawAllCharts();
+        requestPersist();
+      }
+
+      function summarise(snapshot, parseFailed) {
+        if (parseFailed) {
+          return "Parse error";
+        }
+        if (!snapshot) {
+          return "No metrics";
+        }
+        const parts = [];
+        if (typeof snapshot.rpm === "number") {
+          parts.push(`rpm ${Math.round(snapshot.rpm)} rpm`);
+        }
+        if (typeof snapshot.speed === "number") {
+          parts.push(`speed ${snapshot.speed.toFixed(1)} km/h`);
+        }
+        if (typeof snapshot.coolant === "number") {
+          parts.push(`coolant ${snapshot.coolant.toFixed(1)} degC`);
+        }
+        if (typeof snapshot.throttle === "number") {
+          parts.push(`throttle ${Math.round(snapshot.throttle)}%`);
+        }
+        return parts.length ? parts.join(" | ") : "OK";
+      }
+
+      function addToHistory(timestamp, type, snapshot, raw, parseFailed) {
+        history.unshift({
+          timestamp,
+          type,
+          summary: summarise(snapshot, parseFailed),
+          raw,
+          parseFailed: Boolean(parseFailed),
+        });
+        if (history.length > MAX_HISTORY) {
+          history.pop();
+        }
+        renderHistory();
+        requestPersist();
+      }
+
+      function renderHistory() {
+        historyBody.innerHTML = "";
+        if (!history.length) {
+          const row = document.createElement("tr");
+          const cell = document.createElement("td");
+          cell.colSpan = 3;
+          cell.className = "history-empty";
+          cell.textContent = "Waiting for telemetry...";
+          row.append(cell);
+          historyBody.append(row);
+          return;
+        }
+        history.forEach((entry) => {
+          const row = document.createElement("tr");
+          const timeCell = document.createElement("td");
+          timeCell.textContent = new Date(entry.timestamp).toLocaleTimeString();
+          const typeCell = document.createElement("td");
+          typeCell.textContent = entry.type || "--";
+          const summaryCell = document.createElement("td");
+          summaryCell.textContent = entry.summary;
+          summaryCell.title = entry.raw;
+          row.append(timeCell, typeCell, summaryCell);
+          historyBody.append(row);
+        });
+      }
+
+      function formatDuration(ms) {
+        if (ms < 1000) {
+          return "just now";
+        }
+        const seconds = Math.floor(ms / 1000);
+        if (seconds < 60) {
+          return `${seconds}s ago`;
+        }
+        const minutes = Math.floor(seconds / 60);
+        if (minutes < 60) {
+          const remainder = seconds % 60;
+          return remainder ? `${minutes}m ${remainder}s ago` : `${minutes}m ago`;
+        }
+        const hours = Math.floor(minutes / 60);
+        const remainder = minutes % 60;
+        return remainder ? `${hours}h ${remainder}m ago` : `${hours}h ago`;
+      }
+
+      function normaliseTimestamp(value) {
+        if (typeof value === "number" && Number.isFinite(value)) {
+          if (value > 1e12) {
+            return value;
+          }
+          if (value > 1e9) {
+            return value * 1000;
+          }
+          return null;
+        }
+        if (typeof value === "string" && value.trim() !== "") {
+          const parsed = Date.parse(value);
+          if (!Number.isNaN(parsed)) {
+            return parsed;
+          }
+        }
+        return null;
+      }
+
+      function deriveLatency(payload, now) {
+        if (!payload || typeof payload !== "object") {
+          return null;
+        }
+        const candidates = [
+          payload.timestamp,
+          payload.sent_at,
+          payload.sentAt,
+          payload.time,
+          payload.t,
+        ];
+        for (const candidate of candidates) {
+          const resolved = normaliseTimestamp(candidate);
+          if (resolved !== null) {
+            return Math.max(0, now - resolved);
+          }
+        }
+        return null;
+      }
+
+      function deriveMessageType(payload) {
+        if (!payload || typeof payload !== "object") {
+          return "telemetry";
+        }
+        const candidate = pickValue(payload, ["type", "topic", "pid", "meta.type", "name"]);
+        if (candidate && typeof candidate === "string") {
+          return candidate;
+        }
+        if (payload.RPM) {
+          return "RPM";
+        }
+        return "telemetry";
+      }
+
+      function updateDiagnostics() {
+        connectedSinceEl.textContent = connectedSince
+          ? formatDuration(Date.now() - connectedSince)
+          : "--";
+        heartbeatAgeEl.textContent = lastMessageTime
+          ? formatDuration(Date.now() - lastMessageTime)
+          : "--";
+        latencyEl.textContent = lastLatencyMs !== null ? `${lastLatencyMs} ms` : "--";
+        messageCountEl.textContent = totalMessages.toString();
+        filteredCountEl.textContent = filteredMessages.toString();
+        parseErrorsEl.textContent = parseErrors.toString();
+        requestPersist();
+      }
+
+      function requestPersist() {
+        if (!storageEnabled || isRestoring) {
+          return;
+        }
+        if (persistTimer) {
+          return;
+        }
+        persistTimer = window.setTimeout(() => {
+          persistTimer = null;
+          persistState();
+        }, 150);
+      }
+
+      function persistState() {
+        if (!storageEnabled || isRestoring) {
+          return;
+        }
+        try {
+          const state = {
+            history,
+            rpmSeries,
+            coolantSeries,
+            lastParsedMessage,
+            lastMetricSnapshot,
+            connectedSince,
+            lastMessageTime,
+            lastLatencyMs,
+            totalMessages,
+            filteredMessages,
+            parseErrors,
+            isPaused,
+            filterType,
+            latestPayload,
+          };
+          window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        } catch (error) {
+          storageEnabled = false;
+          console.warn("Dashboard state persistence disabled", error);
+        }
+      }
+
+      function restoreState() {
+        if (!storageEnabled) {
+          renderHistory();
+          return;
+        }
+        try {
+          const cached = window.localStorage.getItem(STORAGE_KEY);
+          if (!cached) {
+            renderHistory();
+            return;
+          }
+          isRestoring = true;
+          const state = JSON.parse(cached);
+          if (Array.isArray(state.history)) {
+            history = state.history.filter((entry) => entry && typeof entry === "object");
+          }
+          if (Array.isArray(state.rpmSeries)) {
+            rpmSeries = state.rpmSeries.filter((value) => typeof value === "number");
+          }
+          if (Array.isArray(state.coolantSeries)) {
+            coolantSeries = state.coolantSeries.filter((value) => typeof value === "number");
+          }
+          if (state.lastParsedMessage && typeof state.lastParsedMessage === "object") {
+            lastParsedMessage = state.lastParsedMessage;
+          }
+          if (state.lastMetricSnapshot && typeof state.lastMetricSnapshot === "object") {
+            lastMetricSnapshot = state.lastMetricSnapshot;
+            applyMetricSnapshot(lastMetricSnapshot);
+          }
+          if (typeof state.connectedSince === "number") {
+            connectedSince = state.connectedSince;
+          }
+          if (typeof state.lastMessageTime === "number") {
+            lastMessageTime = state.lastMessageTime;
+          }
+          if (typeof state.lastLatencyMs === "number") {
+            lastLatencyMs = state.lastLatencyMs;
+          }
+          if (typeof state.totalMessages === "number") {
+            totalMessages = state.totalMessages;
+          }
+          if (typeof state.filteredMessages === "number") {
+            filteredMessages = state.filteredMessages;
+          }
+          if (typeof state.parseErrors === "number") {
+            parseErrors = state.parseErrors;
+          }
+          if (typeof state.isPaused === "boolean") {
+            isPaused = state.isPaused;
+            toggleStreamBtn.textContent = isPaused ? "Resume Stream" : "Pause Stream";
+          }
+          if (typeof state.filterType === "string") {
+            filterType = state.filterType;
+            filterTypeInput.value = filterType;
+          }
+          if (typeof state.latestPayload === "string") {
+            latestPayload = state.latestPayload;
+            payloadEl.textContent = latestPayload;
+          }
+          renderHistory();
+          drawAllCharts();
+          isRestoring = false;
+          updateDiagnostics();
+        } catch (error) {
+          isRestoring = false;
+          console.warn("Failed to restore dashboard state", error);
+          history = [];
+          rpmSeries = [];
+          coolantSeries = [];
+          renderHistory();
+        }
+      }
+
+      toggleStreamBtn.addEventListener("click", () => {
+        isPaused = !isPaused;
+        toggleStreamBtn.textContent = isPaused ? "Resume Stream" : "Pause Stream";
+        if (!isPaused) {
+          payloadEl.textContent = latestPayload;
+          if (lastParsedMessage) {
+            const snapshot = updateMetrics(lastParsedMessage);
+            updateCharts(snapshot);
+          }
+          renderHistory();
+        }
+        requestPersist();
+      });
+
+      filterTypeInput.addEventListener("input", (event) => {
+        filterType = event.target.value.trim().toLowerCase();
+        requestPersist();
+      });
+
+      exportBtn.addEventListener("click", () => {
+        const blob = new Blob([latestPayload], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const tempLink = document.createElement("a");
+        tempLink.href = url;
+        tempLink.download = `telemetry-${new Date().toISOString()}.json`;
+        document.body.appendChild(tempLink);
+        tempLink.click();
+        tempLink.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 0);
+      });
+
+      restoreState();
+      setStatus(false);
+      updateDiagnostics();
+
+      const ws = new WebSocket(`ws://${window.location.host}/ws/telemetry`);
+
+      ws.onopen = () => {
+        setStatus(true);
+        statusLabel.textContent = "Connected";
+        connectedSince = Date.now();
+        updateDiagnostics();
+      };
+
+      ws.onclose = () => {
+        setStatus(false);
+        statusLabel.textContent = "Disconnected";
+        connectedSince = null;
+        updateDiagnostics();
+      };
+
+      ws.onerror = () => {
+        setStatus(false);
+        statusLabel.textContent = "Error";
+      };
+
+      ws.onmessage = (event) => {
+        totalMessages += 1;
+        const now = Date.now();
+        lastMessageTime = now;
+
+        let parsed = null;
+        try {
+          parsed = JSON.parse(event.data);
+        } catch (error) {
+          parseErrors += 1;
+        }
+
+        const messageType = parsed ? deriveMessageType(parsed) : "parse-error";
+        if (filterType && messageType.toLowerCase().indexOf(filterType) === -1) {
+          filteredMessages += 1;
+          updateDiagnostics();
+          return;
+        }
+
+        latestPayload = event.data;
+        if (!isPaused) {
+          payloadEl.textContent = event.data;
+        }
+
+        let snapshot = null;
+        if (!isPaused && parsed) {
+          snapshot = updateMetrics(parsed);
+          updateCharts(snapshot);
+        }
+
+        if (!isPaused) {
+          addToHistory(now, messageType, snapshot, event.data, !parsed);
+        }
+
+        if (parsed) {
+          lastParsedMessage = parsed;
+          lastLatencyMs = deriveLatency(parsed, now);
+        } else {
+          lastLatencyMs = null;
+        }
+
+        updateDiagnostics();
+      };
+    </script>
+  </body>
+</html>

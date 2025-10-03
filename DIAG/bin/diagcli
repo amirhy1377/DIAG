@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+"""Command line entry point for headless diagnostic sessions."""
+
+from __future__ import annotations
+
+import argparse
+import sys
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description="Diagnostic CLI")
+    subparsers = parser.add_subparsers(dest="command", required=True)
+
+    start_parser = subparsers.add_parser("start", help="Start a logging session")
+    start_parser.add_argument("--port", required=True, help="Serial port, e.g. COM3")
+    start_parser.add_argument("--rate", type=int, default=5, help="Target poll rate in Hz")
+    start_parser.add_argument("--pids", default="RPM,SPEED,COOLANT_TEMP")
+    start_parser.add_argument("--log", choices=["csv", "parquet"], default="parquet")
+    start_parser.add_argument("--out", default="./logs")
+    start_parser.add_argument("--jsonl", action="store_true")
+
+    dtc_parser = subparsers.add_parser("dtc", help="Interact with DTCs")
+    dtc_parser.add_argument("--read", action="store_true", help="Read DTCs")
+    dtc_parser.add_argument("--clear", action="store_true", help="Clear DTCs")
+    dtc_parser.add_argument("--confirm", action="store_true", help="Require confirmation before clearing")
+
+    subparsers.add_parser("stop", help="Stop the active session")
+
+    args = parser.parse_args(argv)
+    # TODO: wire the CLI into the services and transports
+    print(f"Command {args.command} is not yet implemented")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
