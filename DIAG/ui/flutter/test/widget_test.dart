@@ -19,7 +19,7 @@ void main() {
       ),
     );
 
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     final l10n = await AppLocalizations.delegate.load(const Locale('en'));
     expect(find.textContaining(l10n.dashboardHeading), findsOneWidget);

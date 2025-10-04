@@ -19,6 +19,45 @@ class AppLocalizationsAr extends AppLocalizations {
   String get navLogs => 'السجلات';
 
   @override
+  String get configHeading => 'الاتصال والجلسة';
+
+  @override
+  String get configBaseUrlLabel => 'عنوان الخادم الأساسي';
+
+  @override
+  String get configBaseUrlApply => 'حفظ';
+
+  @override
+  String get configBaseUrlApplied => 'تم تحديث عنوان الخادم';
+
+  @override
+  String get configVinLabel => 'رقم الهيكل (VIN)';
+
+  @override
+  String get configPortLabel => 'المنفذ';
+
+  @override
+  String get configAdapterLabel => 'معرف المحوّل';
+
+  @override
+  String get configRateLabel => 'المعدل المستهدف (هرتز)';
+
+  @override
+  String get configPidsLabel => 'معرّفات PID المراقبة';
+
+  @override
+  String get configPidsHint => 'افصل القيم بفاصلة، مثال: 010C,0105,0110';
+
+  @override
+  String get configLogRootLabel => 'مسار السجلات';
+
+  @override
+  String get configSeedLabel => 'بذرة القياسات (اختياري)';
+
+  @override
+  String get configStartButton => 'بدء الجلسة';
+
+  @override
   String get dashboardHeading => 'التحكم التشخيصي';
 
   @override
@@ -28,13 +67,25 @@ class AppLocalizationsAr extends AppLocalizations {
   String get dashboardNoSessionTitle => 'لا توجد جلسة قيد التشغيل';
 
   @override
-  String get dashboardNoSessionDescription => 'ابدأ جلسة تشخيص لبدء بث القياسات. حدّث معلمات الطلب قبل الاستخدام في بيئة الإنتاج.';
-
-  @override
-  String get dashboardStartDemoButton => 'بدء جلسة تجريبية';
+  String get dashboardNoSessionDescription => 'اضبط معلمات الجلسة أعلاه واضغط بدء لبدء بث القياسات.';
 
   @override
   String get dashboardSessionActive => 'جلسة نشطة';
+
+  @override
+  String get dashboardStartSuccess => 'تم بدء جلسة التشخيص';
+
+  @override
+  String get dashboardStopSuccess => 'تم إيقاف جلسة التشخيص';
+
+  @override
+  String get dashboardRequestFailed => 'فشل الطلب. تحقق من عنوان الخادم ثم أعد المحاولة.';
+
+  @override
+  String get dashboardInvalidRate => 'أدخل معدل هدف صالحاً.';
+
+  @override
+  String get dashboardInvalidPids => 'أدخل PID واحداً على الأقل (مفصولاً بفواصل).';
 
   @override
   String get infoSessionId => 'معرّف الجلسة';
@@ -43,10 +94,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get infoVin => 'VIN';
 
   @override
-  String get infoAdapter => 'المحول';
+  String get infoAdapter => 'المحوّل';
 
   @override
-  String get infoTargetRate => 'معدل الهدف';
+  String get infoTargetRate => 'المعدل المستهدف';
 
   @override
   String get infoActualRate => 'المعدل الفعلي';
@@ -67,7 +118,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get dashboardActivityCardTitle => 'النشاط';
 
   @override
-  String get dashboardActivityPlaceholder => 'ستظهر مخططات القياسات، وإشعارات DTC، وسجلات الجلسة هنا عند تشغيل جلسة.';
+  String get dashboardActivityPlaceholder => 'ستظهر مخططات القياسات وإشعارات DTC والسجلات هنا عند تشغيل الجلسة.';
 
   @override
   String get dashboardActivityTelemetryTitle => 'بث القياسات الحية';
@@ -88,6 +139,20 @@ class AppLocalizationsAr extends AppLocalizations {
   String get telemetryDescription => 'صِل هذا العميل بنقطة الويب سوكت FastAPI (/ws/telemetry) لبث هذه الودجات.';
 
   @override
+  String get telemetryCardHint => 'الربط بالبيانات فعّال. القيم أدناه تعكس أحدث العينات من المركبة.';
+
+  @override
+  String get telemetryAwaitingData => 'جارٍ انتظار بيانات القياسات...';
+
+  @override
+  String get telemetryNoSession => 'ابدأ جلسة تشخيص لبث القياسات.';
+
+  @override
+  String telemetryStreamError(Object error) {
+    return 'خطأ في تدفق القياسات: $error';
+  }
+
+  @override
   String get telemetryCardRpm => 'دورات المحرك';
 
   @override
@@ -95,9 +160,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get telemetryCardCoolant => 'درجة حرارة سائل التبريد';
-
-  @override
-  String get telemetryCardHint => 'خطافات ربط البيانات جاهزة؛ مرّر القيم إلى رسام المخطط لعرض الإشارات الحية.';
 
   @override
   String get logsHeading => 'سجلات الجلسة';
@@ -109,7 +171,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get logsEmptyTitle => 'لا توجد سجلات للعرض بعد';
 
   @override
-  String get logsEmptySubtitle => 'نفّذ نقطة النهاية /v1/logs لاسترداد سجل الجلسات.';
+  String get logsEmptySubtitle => 'نفّذ نقطة النهاية /v1/logs لاسترداد تاريخ الجلسات.';
 
   @override
   String get retryButton => 'إعادة المحاولة';

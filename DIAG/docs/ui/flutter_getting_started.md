@@ -48,7 +48,7 @@ flutter build web
 - Access strings with `AppLocalizations.of(context)` so widgets respond to runtime locale changes.
 
 ## Next Steps
-1. Wire `DiagApiClient` to the live FastAPI instance and flesh out the telemetry stream provider.
-2. Replace the dashboard demo request with a form-driven workflow.
-3. Integrate charts (e.g., `syncfusion_flutter_charts`) for real-time telemetry.
-4. Hook log browser to the Parquet listing endpoint once exposed.
+1. Configure environment-specific base URLs or feature flags (consider .env files or remote config).
+2. Replace the sparkline placeholders with a production charting package (e.g., syncfusion_flutter_charts) and add PID-level alarms.
+3. Wire the log browser to the forthcoming `/v1/logs` endpoint once available.
+4. Expand widget/integration tests to cover start/stop flows and websocket telemetry.

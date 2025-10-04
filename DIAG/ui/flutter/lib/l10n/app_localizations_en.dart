@@ -19,6 +19,45 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navLogs => 'Logs';
 
   @override
+  String get configHeading => 'Connection & Session';
+
+  @override
+  String get configBaseUrlLabel => 'Backend base URL';
+
+  @override
+  String get configBaseUrlApply => 'Save';
+
+  @override
+  String get configBaseUrlApplied => 'Backend URL updated';
+
+  @override
+  String get configVinLabel => 'Vehicle VIN';
+
+  @override
+  String get configPortLabel => 'Port';
+
+  @override
+  String get configAdapterLabel => 'Adapter ID';
+
+  @override
+  String get configRateLabel => 'Target rate (Hz)';
+
+  @override
+  String get configPidsLabel => 'Monitored PIDs';
+
+  @override
+  String get configPidsHint => 'Comma-separated, e.g. 010C,0105,0110';
+
+  @override
+  String get configLogRootLabel => 'Log directory';
+
+  @override
+  String get configSeedLabel => 'Telemetry seed (optional)';
+
+  @override
+  String get configStartButton => 'Start session';
+
+  @override
   String get dashboardHeading => 'Diagnostic Control';
 
   @override
@@ -28,13 +67,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dashboardNoSessionTitle => 'No session running';
 
   @override
-  String get dashboardNoSessionDescription => 'Launch a diagnostic session to begin streaming telemetry. Update the request parameters before production use.';
-
-  @override
-  String get dashboardStartDemoButton => 'Start demo session';
+  String get dashboardNoSessionDescription => 'Adjust the session parameters above and press Start to begin streaming telemetry.';
 
   @override
   String get dashboardSessionActive => 'Session active';
+
+  @override
+  String get dashboardStartSuccess => 'Diagnostic session started';
+
+  @override
+  String get dashboardStopSuccess => 'Diagnostic session stopped';
+
+  @override
+  String get dashboardRequestFailed => 'Request failed. Check the backend URL and try again.';
+
+  @override
+  String get dashboardInvalidRate => 'Enter a valid target rate.';
+
+  @override
+  String get dashboardInvalidPids => 'Provide at least one PID (comma separated).';
 
   @override
   String get infoSessionId => 'Session ID';
@@ -88,6 +139,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get telemetryDescription => 'Connect this client to the FastAPI websocket endpoint (/ws/telemetry) to stream these widgets.';
 
   @override
+  String get telemetryCardHint => 'Data binding is live. Values below reflect the latest samples from the vehicle.';
+
+  @override
+  String get telemetryAwaitingData => 'Waiting for telemetry...';
+
+  @override
+  String get telemetryNoSession => 'Start a diagnostic session to stream telemetry.';
+
+  @override
+  String telemetryStreamError(Object error) {
+    return 'Telemetry stream error: $error';
+  }
+
+  @override
   String get telemetryCardRpm => 'Engine RPM';
 
   @override
@@ -95,9 +160,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get telemetryCardCoolant => 'Coolant Temperature';
-
-  @override
-  String get telemetryCardHint => 'Data binding hooks are ready: feed values into the chart painter to visualise live signals.';
 
   @override
   String get logsHeading => 'Session Logs';

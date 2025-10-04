@@ -63,5 +63,6 @@ This document outlines viable front-end strategies for delivering DIAG on Androi
 ## Current Status
 - [x] Flutter project scaffolded at `ui/flutter` with Riverpod, GoRouter, and Dio preconfigured.
 - [x] Localization available (en, fa, ar, ru, zh).
+- [x] Dashboard and telemetry wired to FastAPI (status/start/stop/websocket).
 - [ ] Backend API wiring (REST + websocket)
 - [ ] Production theming and design polish

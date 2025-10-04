@@ -19,6 +19,45 @@ class AppLocalizationsFa extends AppLocalizations {
   String get navLogs => 'گزارش‌ها';
 
   @override
+  String get configHeading => 'اتصال و نشست';
+
+  @override
+  String get configBaseUrlLabel => 'نشانی پایهٔ بک‌اند';
+
+  @override
+  String get configBaseUrlApply => 'ذخیره';
+
+  @override
+  String get configBaseUrlApplied => 'نشانی بک‌اند به‌روزرسانی شد';
+
+  @override
+  String get configVinLabel => 'VIN خودرو';
+
+  @override
+  String get configPortLabel => 'پورت';
+
+  @override
+  String get configAdapterLabel => 'شناسه مبدل';
+
+  @override
+  String get configRateLabel => 'نرخ هدف (هرتز)';
+
+  @override
+  String get configPidsLabel => 'PIDهای پایش‌شده';
+
+  @override
+  String get configPidsHint => 'با کاما جدا کنید، مثال: 010C,0105,0110';
+
+  @override
+  String get configLogRootLabel => 'مسیر ذخیرهٔ گزارش';
+
+  @override
+  String get configSeedLabel => 'بذر تله‌متری (اختیاری)';
+
+  @override
+  String get configStartButton => 'شروع نشست';
+
+  @override
   String get dashboardHeading => 'کنترل عیب‌یابی';
 
   @override
@@ -28,13 +67,25 @@ class AppLocalizationsFa extends AppLocalizations {
   String get dashboardNoSessionTitle => 'هیچ نشستی در حال اجرا نیست';
 
   @override
-  String get dashboardNoSessionDescription => 'برای شروع جریان تله‌متری یک نشست عیب‌یابی را اجرا کنید. پیش از استفاده در محیط عملیاتی پارامترهای درخواست را به‌روزرسانی کنید.';
-
-  @override
-  String get dashboardStartDemoButton => 'شروع نشست آزمایشی';
+  String get dashboardNoSessionDescription => 'پارامترهای نشست را در بالا تنظیم کرده و برای آغاز جریان تله‌متری دکمهٔ شروع را فشار دهید.';
 
   @override
   String get dashboardSessionActive => 'نشست فعال است';
+
+  @override
+  String get dashboardStartSuccess => 'نشست عیب‌یابی آغاز شد';
+
+  @override
+  String get dashboardStopSuccess => 'نشست عیب‌یابی متوقف شد';
+
+  @override
+  String get dashboardRequestFailed => 'درخواست انجام نشد. نشانی بک‌اند را بررسی کرده و دوباره تلاش کنید.';
+
+  @override
+  String get dashboardInvalidRate => 'یک نرخ هدف معتبر وارد کنید.';
+
+  @override
+  String get dashboardInvalidPids => 'دست‌کم یک PID (با کاما جدا شده) وارد کنید.';
 
   @override
   String get infoSessionId => 'شناسه نشست';
@@ -55,7 +106,7 @@ class AppLocalizationsFa extends AppLocalizations {
   String get infoStarted => 'زمان آغاز';
 
   @override
-  String get infoMonitoredPids => 'PID های پایش‌شده';
+  String get infoMonitoredPids => 'PIDهای پایش‌شده';
 
   @override
   String get dashboardStopSession => 'توقف نشست';
@@ -67,25 +118,39 @@ class AppLocalizationsFa extends AppLocalizations {
   String get dashboardActivityCardTitle => 'فعالیت';
 
   @override
-  String get dashboardActivityPlaceholder => 'وقتی نشست فعال باشد نمودارهای تله‌متری، نکات DTC و گزارش‌ها در اینجا نمایش داده می‌شوند.';
+  String get dashboardActivityPlaceholder => 'با فعال شدن نشست، نمودارهای تله‌متری، رویدادهای DTC و گزارش‌ها در اینجا نمایش داده می‌شوند.';
 
   @override
   String get dashboardActivityTelemetryTitle => 'جریان تله‌متری زنده';
 
   @override
-  String get dashboardActivityTelemetrySubtitle => 'برای دیدن نمودارها به برگه تله‌متری بروید.';
+  String get dashboardActivityTelemetrySubtitle => 'برای دیدن نمودارها به برگهٔ تله‌متری بروید.';
 
   @override
-  String get dashboardActivityLogsTitle => 'خط لوله گزارش فعال است';
+  String get dashboardActivityLogsTitle => 'خط لولهٔ گزارش فعال است';
 
   @override
-  String get dashboardActivityLogsSubtitle => 'نویسنده Parquet در پس‌زمینه در حال ذخیره‌سازی داده است.';
+  String get dashboardActivityLogsSubtitle => 'نویسندهٔ Parquet در پس‌زمینه در حال ذخیره‌سازی داده است.';
 
   @override
   String get telemetryHeading => 'تله‌متری زنده';
 
   @override
-  String get telemetryDescription => 'برای نمایش این ویجت‌ها، این کلاینت را به انتهای وب‌سوکت FastAPI (/ws/telemetry) متصل کنید.';
+  String get telemetryDescription => 'این کلاینت را به نقطهٔ پایانی وب‌سوکت FastAPI (/ws/telemetry) متصل کنید تا این ویجت‌ها داده دریافت کنند.';
+
+  @override
+  String get telemetryCardHint => 'اتصال داده فعال است. مقادیر زیر آخرین نمونه‌های دریافتی از خودرو هستند.';
+
+  @override
+  String get telemetryAwaitingData => 'در انتظار دریافت تله‌متری...';
+
+  @override
+  String get telemetryNoSession => 'برای پخش تله‌متری یک نشست عیب‌یابی را آغاز کنید.';
+
+  @override
+  String telemetryStreamError(Object error) {
+    return 'خطای جریان تله‌متری: $error';
+  }
 
   @override
   String get telemetryCardRpm => 'دور موتور';
@@ -97,9 +162,6 @@ class AppLocalizationsFa extends AppLocalizations {
   String get telemetryCardCoolant => 'دمای مایع خنک‌کننده';
 
   @override
-  String get telemetryCardHint => 'قلاب‌های اتصال داده آماده‌اند؛ مقادیر را به رسم‌گر نمودار بدهید تا سیگنال‌های زنده نمایش داده شوند.';
-
-  @override
   String get logsHeading => 'گزارش‌های نشست';
 
   @override
@@ -109,7 +171,7 @@ class AppLocalizationsFa extends AppLocalizations {
   String get logsEmptyTitle => 'هنوز گزارشی برای نمایش نیست';
 
   @override
-  String get logsEmptySubtitle => 'برای دریافت تاریخچه نشست، انتهای /v1/logs را پیاده‌سازی کنید.';
+  String get logsEmptySubtitle => 'برای دریافت تاریخچه نشست، نقطهٔ پایانی /v1/logs را پیاده‌سازی کنید.';
 
   @override
   String get retryButton => 'تلاش دوباره';

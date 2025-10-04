@@ -19,22 +19,73 @@ class AppLocalizationsRu extends AppLocalizations {
   String get navLogs => 'Журналы';
 
   @override
+  String get configHeading => 'Подключение и сеанс';
+
+  @override
+  String get configBaseUrlLabel => 'Базовый URL сервера';
+
+  @override
+  String get configBaseUrlApply => 'Сохранить';
+
+  @override
+  String get configBaseUrlApplied => 'Адрес сервера обновлён';
+
+  @override
+  String get configVinLabel => 'VIN автомобиля';
+
+  @override
+  String get configPortLabel => 'Порт';
+
+  @override
+  String get configAdapterLabel => 'Идентификатор адаптера';
+
+  @override
+  String get configRateLabel => 'Целевая частота (Гц)';
+
+  @override
+  String get configPidsLabel => 'Отслеживаемые PID';
+
+  @override
+  String get configPidsHint => 'Перечислите через запятую, например 010C,0105,0110';
+
+  @override
+  String get configLogRootLabel => 'Каталог журналов';
+
+  @override
+  String get configSeedLabel => 'Seed телеметрии (необязательно)';
+
+  @override
+  String get configStartButton => 'Запустить сеанс';
+
+  @override
   String get dashboardHeading => 'Управление диагностикой';
 
   @override
-  String get dashboardLoadingError => 'Не удалось загрузить состояние сессии';
+  String get dashboardLoadingError => 'Не удалось загрузить состояние сеанса';
 
   @override
   String get dashboardNoSessionTitle => 'Сеанс не запущен';
 
   @override
-  String get dashboardNoSessionDescription => 'Запустите диагностический сеанс, чтобы начать поток телеметрии. Перед эксплуатацией обновите параметры запроса.';
-
-  @override
-  String get dashboardStartDemoButton => 'Запустить демо-сеанс';
+  String get dashboardNoSessionDescription => 'Настройте параметры сеанса выше и нажмите \"Запустить\", чтобы начать поток телеметрии.';
 
   @override
   String get dashboardSessionActive => 'Сеанс активен';
+
+  @override
+  String get dashboardStartSuccess => 'Диагностический сеанс запущен';
+
+  @override
+  String get dashboardStopSuccess => 'Диагностический сеанс остановлен';
+
+  @override
+  String get dashboardRequestFailed => 'Запрос не выполнен. Проверьте адрес сервера и повторите попытку.';
+
+  @override
+  String get dashboardInvalidRate => 'Введите корректную целевую частоту.';
+
+  @override
+  String get dashboardInvalidPids => 'Укажите как минимум один PID (через запятую).';
 
   @override
   String get infoSessionId => 'Идентификатор сеанса';
@@ -79,13 +130,27 @@ class AppLocalizationsRu extends AppLocalizations {
   String get dashboardActivityLogsTitle => 'Конвейер журналов активен';
 
   @override
-  String get dashboardActivityLogsSubtitle => 'Процесс записи Parquet выполняет сброс в фоновом режиме.';
+  String get dashboardActivityLogsSubtitle => 'Процесс записи Parquet выполняет сброс в фоне.';
 
   @override
   String get telemetryHeading => 'Онлайн‑телеметрия';
 
   @override
   String get telemetryDescription => 'Подключите этот клиент к websocket FastAPI (/ws/telemetry), чтобы транслировать эти виджеты.';
+
+  @override
+  String get telemetryCardHint => 'Связь с данными активна. Значения ниже отражают последние образцы с автомобиля.';
+
+  @override
+  String get telemetryAwaitingData => 'Ожидание телеметрии...';
+
+  @override
+  String get telemetryNoSession => 'Запустите диагностический сеанс, чтобы получить телеметрию.';
+
+  @override
+  String telemetryStreamError(Object error) {
+    return 'Ошибка потока телеметрии: $error';
+  }
 
   @override
   String get telemetryCardRpm => 'Обороты двигателя';
@@ -95,9 +160,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get telemetryCardCoolant => 'Температура охлаждающей жидкости';
-
-  @override
-  String get telemetryCardHint => 'Привязки данных готовы: передайте значения рисовальщику графиков, чтобы увидеть живые сигналы.';
 
   @override
   String get logsHeading => 'Журналы сеанса';

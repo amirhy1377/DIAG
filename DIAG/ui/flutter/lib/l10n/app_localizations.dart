@@ -125,6 +125,84 @@ abstract class AppLocalizations {
   /// **'Logs'**
   String get navLogs;
 
+  /// No description provided for @configHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection & Session'**
+  String get configHeading;
+
+  /// No description provided for @configBaseUrlLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Backend base URL'**
+  String get configBaseUrlLabel;
+
+  /// No description provided for @configBaseUrlApply.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get configBaseUrlApply;
+
+  /// No description provided for @configBaseUrlApplied.
+  ///
+  /// In en, this message translates to:
+  /// **'Backend URL updated'**
+  String get configBaseUrlApplied;
+
+  /// No description provided for @configVinLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicle VIN'**
+  String get configVinLabel;
+
+  /// No description provided for @configPortLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Port'**
+  String get configPortLabel;
+
+  /// No description provided for @configAdapterLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Adapter ID'**
+  String get configAdapterLabel;
+
+  /// No description provided for @configRateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Target rate (Hz)'**
+  String get configRateLabel;
+
+  /// No description provided for @configPidsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Monitored PIDs'**
+  String get configPidsLabel;
+
+  /// No description provided for @configPidsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Comma-separated, e.g. 010C,0105,0110'**
+  String get configPidsHint;
+
+  /// No description provided for @configLogRootLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Log directory'**
+  String get configLogRootLabel;
+
+  /// No description provided for @configSeedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Telemetry seed (optional)'**
+  String get configSeedLabel;
+
+  /// No description provided for @configStartButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Start session'**
+  String get configStartButton;
+
   /// No description provided for @dashboardHeading.
   ///
   /// In en, this message translates to:
@@ -146,20 +224,44 @@ abstract class AppLocalizations {
   /// No description provided for @dashboardNoSessionDescription.
   ///
   /// In en, this message translates to:
-  /// **'Launch a diagnostic session to begin streaming telemetry. Update the request parameters before production use.'**
+  /// **'Adjust the session parameters above and press Start to begin streaming telemetry.'**
   String get dashboardNoSessionDescription;
-
-  /// No description provided for @dashboardStartDemoButton.
-  ///
-  /// In en, this message translates to:
-  /// **'Start demo session'**
-  String get dashboardStartDemoButton;
 
   /// No description provided for @dashboardSessionActive.
   ///
   /// In en, this message translates to:
   /// **'Session active'**
   String get dashboardSessionActive;
+
+  /// No description provided for @dashboardStartSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Diagnostic session started'**
+  String get dashboardStartSuccess;
+
+  /// No description provided for @dashboardStopSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Diagnostic session stopped'**
+  String get dashboardStopSuccess;
+
+  /// No description provided for @dashboardRequestFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Request failed. Check the backend URL and try again.'**
+  String get dashboardRequestFailed;
+
+  /// No description provided for @dashboardInvalidRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid target rate.'**
+  String get dashboardInvalidRate;
+
+  /// No description provided for @dashboardInvalidPids.
+  ///
+  /// In en, this message translates to:
+  /// **'Provide at least one PID (comma separated).'**
+  String get dashboardInvalidPids;
 
   /// No description provided for @infoSessionId.
   ///
@@ -263,6 +365,30 @@ abstract class AppLocalizations {
   /// **'Connect this client to the FastAPI websocket endpoint (/ws/telemetry) to stream these widgets.'**
   String get telemetryDescription;
 
+  /// No description provided for @telemetryCardHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Data binding is live. Values below reflect the latest samples from the vehicle.'**
+  String get telemetryCardHint;
+
+  /// No description provided for @telemetryAwaitingData.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for telemetry...'**
+  String get telemetryAwaitingData;
+
+  /// No description provided for @telemetryNoSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Start a diagnostic session to stream telemetry.'**
+  String get telemetryNoSession;
+
+  /// No description provided for @telemetryStreamError.
+  ///
+  /// In en, this message translates to:
+  /// **'Telemetry stream error: {error}'**
+  String telemetryStreamError(Object error);
+
   /// No description provided for @telemetryCardRpm.
   ///
   /// In en, this message translates to:
@@ -280,12 +406,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Coolant Temperature'**
   String get telemetryCardCoolant;
-
-  /// No description provided for @telemetryCardHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Data binding hooks are ready: feed values into the chart painter to visualise live signals.'**
-  String get telemetryCardHint;
 
   /// No description provided for @logsHeading.
   ///
