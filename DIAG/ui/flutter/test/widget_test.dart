@@ -1,4 +1,7 @@
-﻿import 'package:flutter_riverpod/flutter_riverpod.dart';
+﻿import 'dart:ui';
+
+import 'package:diag_ui/l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:diag_ui/app.dart';
@@ -18,7 +21,8 @@ void main() {
 
     await tester.pump();
 
-    expect(find.textContaining('Diagnostic Control'), findsOneWidget);
+    final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+    expect(find.textContaining(l10n.dashboardHeading), findsOneWidget);
   });
 }
 

@@ -216,3 +216,5 @@ __marimo__/
 /ui/
 /pyproject.toml
 /.env.example
+!DIAG/ui/flutter/lib/
+!DIAG/ui/flutter/lib/**

@@ -57,6 +57,11 @@ This document outlines viable front-end strategies for delivering DIAG on Androi
 ## Longer-Term Enhancements
 - Offline cache of diagnostic sessions for replay.
 - Real-time collaboration (share telemetry stream).
-- Localization infrastructure (ARB files for Flutter, i18next for React, Resx for MAUI).
+- Extend localization to additional stacks if adopted (Flutter ships with en/fa/ar/ru/zh).
 - Theming system to switch between light/dark and OEM branding.
-\n## Current Status\n- [x] Flutter project scaffolded at \ui/flutter\ with Riverpod, GoRouter, and Dio preconfigured.\n- [ ] Backend API wiring (REST + websocket)\n- [ ] Production theming and design polish\n
+
+## Current Status
+- [x] Flutter project scaffolded at `ui/flutter` with Riverpod, GoRouter, and Dio preconfigured.
+- [x] Localization available (en, fa, ar, ru, zh).
+- [ ] Backend API wiring (REST + websocket)
+- [ ] Production theming and design polish

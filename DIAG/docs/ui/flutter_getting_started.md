@@ -42,6 +42,11 @@ flutter build web
 - `lib/services/` – HTTP and websocket clients + data models mirroring FastAPI schemas.
 - `lib/features/` – feature-oriented UI (dashboard, telemetry, logs, shared scaffolding).
 
+## Localization
+- Translations live in `lib/l10n/app_*.arb` (English, Persian, Arabic, Russian, Chinese).
+- Run `flutter gen-l10n` or `flutter pub get` after editing ARB files to regenerate `AppLocalizations`.
+- Access strings with `AppLocalizations.of(context)` so widgets respond to runtime locale changes.
+
 ## Next Steps
 1. Wire `DiagApiClient` to the live FastAPI instance and flesh out the telemetry stream provider.
 2. Replace the dashboard demo request with a form-driven workflow.
